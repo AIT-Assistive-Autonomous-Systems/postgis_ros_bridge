@@ -1,0 +1,85 @@
+postgis_ros_publisher:
+  ros__parameters:
+    postgresql:
+      user: "postgres"
+      pass_env: "POSTGRES_PASSWORD" # read password from environment variable
+      pass: "postgres" # TODO: Alternative way w/o need of storing password in plaintext
+      host: "localhost"
+      port: 5432
+      schema: "postgres_alchemy_ait"
+
+    publish:
+      - query_point
+      - query_marker
+      - query_marker_array
+      - query_pointcloud
+      - query_pose
+      - query_pose_array
+      - query_pose_stamped
+      - query_polygon
+      - query_polygon_stamped
+
+    # special section for default values for all queries
+    query_defaults:
+      rate: 10.0
+      frame_id: "map"
+
+    query_point:
+      query: "SELECT position AS geometry, 'test_frame_id' AS frame_id FROM landmark;"
+      type: "PointStamped" 
+      topic: "point"
+
+    query_marker:
+      query: "SELECT ROW_NUMBER() OVER (ORDER BY pose.id) AS id, pose.position AS geometry, pose.rotation_vector AS rotation, 'test_frame_id' AS frame_id FROM pose;"
+      type: "Marker"
+      marker_type: "visualization_msgs::Marker::SPHERE" # marker_type or here | default sphere
+      topic: "marker"
+
+    query_marker_array:
+      query: "SELECT ROW_NUMBER() OVER (ORDER BY pose.id) AS id, pose.position AS geometry, pose.rotation_vector AS rotation, 'test_frame_id' AS frame_id FROM pose;"
+      type: "MarkerArray"
+      marker_type: "visualization_msgs::Marker::SPHERE" # marker_type or here | default sphere
+      topic: "marker_array"
+      frame_id: "test_frame_id" # custom
+
+    query_pointcloud:
+      query: "SELECT position AS geometry FROM landmark;"
+      type: "PointCloud2"
+      frame_id: "test_frame_id" # custom
+      topic: "pointcloud"
+      rate: 1.0
+
+    query_pose:
+      query: "SELECT pose.position AS geometry, pose.rotation_vector AS rotation FROM pose;"
+      type: "Pose"
+      topic: "pose"
+
+    query_pose_array:
+      query: "SELECT pose.position AS geometry, pose.rotation_vector AS rotation FROM pose;"
+      type: "PoseArray"
+      topic: "pose_array"
+      frame_id: "test_frame_id"
+
+    query_pose_stamped:
+      query: "SELECT pose.position AS geometry, pose.rotation_vector AS rotation, 'test_frame_id' AS frame_id FROM pose;"
+      type: "PoseStamped"
+      topic: "pose_stamped"
+      
+    query_polygon:
+      query: "SELECT ST_MakePolygon( 'LINESTRING(0 0, 5 5, 7.7 10, -1.0 10.0, 0 0)') AS geometry, 'test' AS frame_id;"
+      type: "Polygon"
+      topic: "polygon"
+      
+
+    query_polygon_stamped:
+      query: "SELECT ST_MakePolygon( 'LINESTRING(0 0 0, 5 5 1, 7.7 10 1, -1.0 10.0 0, 0 0 0)') AS geometry, 'test' AS frame_id;"
+      type: "PolygonStamped"
+      topic: "polygon_stamped"
+      frame_id: "test_frame_id"
+      
+
+      # frame_id: "map"
+      # rate: 10
+# "SELECT ST_MakePolygon( 'LINESTRING(75.15 29.53 1.0, 77 29 1,77.6 29.5 1.0 , 75.15 29.53 1.0 )') AS geometry, ST_GeometryType(ST_MakePolygon( 'LINESTRING(75.15 29.53 1,77 29 1,77.6 29.5 1, 75.15 29.53 1)')) AS type, 'test' AS frame_id;"
+# "SELECT ST_MakePoint(10.15, 13.53, 0.0) AS geometry, ST_GeometryType(ST_MakePoint(10.15, 13.53, 0.0)) AS type, 'test' AS frame_id;"
+# "SELECT ST_MakePoint(75.15, 29.53, 1.0) AS geometry, ST_GeometryType(ST_MakePoint(75.15, 29.53, 1.0)) AS type, 'test' AS frame_id;"

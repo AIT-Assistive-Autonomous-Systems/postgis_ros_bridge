@@ -1,0 +1,91 @@
+postgis_ros_publisher:
+  ros__parameters:
+
+    postgresql:
+      user: "postgres"
+      pass_env: "POSTGRES_PASSWORD" # read password from environment variable
+      pass: "postgres" # directly provides password (overwrites password from environment variable)
+      host: "L1AS17"
+      port: 5432
+      schema: "test"
+
+    publish:
+      - query_point
+      - query_marker
+      - query_road
+      - query_building
+      - query_pointcloud
+      - query_polygon
+      - query_polygon_stamped
+
+
+    # special section for default values for all queries
+    query_defaults:
+      frame_id: "map"
+      rate: 1.0
+      geodesic: true
+
+    # specify cartesian transformation for all queries with geodesic=true
+    cartesian_transform:  
+      type: "utm" 
+      # specify directly utm zone and band or alternatively provide a reference point with lon/lat
+      # utm_zone: 33  
+      # utm_band: "N"
+      lon: 16.511422682732736
+      lat: 47.977274686327114
+      broadcast_cartesian_transform: true 
+      yaw_offset: 0.0 # manual rotation of the utm->map transform
+      world_frame_id: "map"
+      cartesian_frame_id: "utm"
+      inplace: false  # directly transform utm to map without broadcasting tf
+
+        
+    query_point: 
+      query: "SELECT geom AS geometry FROM landmark;"
+      type: "PointStamped" 
+      topic: "point"
+      geodesic: true
+
+    query_road: 
+      query: "SELECT id, geom AS geometry FROM road;"
+      topic: "marker_array"
+      type: "MarkerArray"
+
+      # marker_type: "visualization_msgs::Marker::LINE_STRIP" 
+      marker_scale: [1.0, 1.0, 1.0]
+      
+
+    query_building: 
+      query: "SELECT id, geom AS geometry FROM building;"
+      topic: "marker_array"
+      type: "MarkerArray"
+      # marker_type: "visualization_msgs::Marker::LINE_STRIP" 
+      marker_ns: "buildings"
+      marker_color: [0.0, 1.0, 0.0, 1.0]
+      marker_scale: [1.0, 1.0, 1.0]
+      marker_lifetime: 1 # 1s
+      rate: 1.0 # publish once
+
+    query_marker: 
+      query: "SELECT id, geom AS geometry FROM landmark;"
+      type: "MarkerArray" # Point2D PointCloud, Polygon Marker, Marker, Pose 
+      topic: "marker_array"
+ 
+      marker_type: "visualization_msgs::Marker::SPHERE"  
+      marker_ns: "landmarks"
+      marker_scale: [2.0, 2.0, 2.0]
+
+    query_pointcloud: 
+      query: "SELECT geom AS geometry FROM landmark;"
+      type: "PointCloud2" # Point2D PointCloud, Polygon Marker, Marker, Pose 
+      topic: "pointcloud"
+
+    query_polygon: 
+      query: "SELECT ST_MakePolygon( 'LINESTRING(16.511422682732736 47.977274686327114 0, 16.511422682732736 47.977274686327114 2, 16.511422682732736 47.977296686329114 2   , 16.511422682732736 47.977274686327114 0)') AS geometry;"
+      type: "Polygon"
+      topic: "polygon"
+
+    query_polygon_stamped: 
+      query: "SELECT ST_MakePolygon( 'LINESTRING(16.511422682732736 47.977274686327114 0, 16.511422682732736 47.977274686327114 2, 16.511422682732736 47.977296686329114 2   , 16.511422682732736 47.977274686327114 0)') AS geometry;"
+      type: "PolygonStamped"
+      topic: "polygon_stamped"

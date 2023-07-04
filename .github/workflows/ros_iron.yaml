@@ -1,0 +1,19 @@
+name: ROS Iron Irwini
+
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+    
+jobs:
+  test_iron:
+    name: test_iron
+    runs-on: ubuntu-latest
+    steps:
+      - 
+        name: Checkout code
+        uses: actions/checkout@v3
+      -
+        name: Test Iron
+        uses: ./.github/actions/test_iron/
+

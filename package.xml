@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>postgis_ros_bridge</name>
+  <version>0.0.0</version>
+  <description>A library for publishing spatial PostGIS data to ROS.</description>
+  <maintainer email="marco.wallner@ait.ac.at">Marco Wallner</maintainer>
+  <license>Apache License 2.0</license>
+  <author email="matthias.schoerghuber@ait.ac.at">Matthias Schoerghuber</author>
+  <author email="marco.wallner@ait.ac.at">Marco Wallner</author>
+  <author email="markus.hofstaetter@ait.ac.at">Markus Hofstaetter</author>
+
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>sensor_msgs_py</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>visualization_msgs</exec_depend>
+  <exec_depend>builtin_interfaces</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>rcl_interfaces</exec_depend>
+  <exec_depend>python3-shapely</exec_depend>
+  <exec_depend>python3-scipy</exec_depend>
+  <exec_depend>libpq-dev</exec_depend>
+  <!-- dependency in rosdep wrong -->
+  <!-- <exec_depend>python-psycopg2</exec_depend> -->
+  <exec_depend>python3-pyproj</exec_depend>
+  <exec_depend>python3-sqlalchemy</exec_depend>
+
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
+
+  <test_depend>sensor_msgs</test_depend>
+  <test_depend>sensor_msgs_py</test_depend>
+  <test_depend>geometry_msgs</test_depend>
+  <test_depend>visualization_msgs</test_depend>
+  <test_depend>builtin_interfaces</test_depend>
+  <test_depend>tf2_ros</test_depend>
+  <test_depend>rclpy</test_depend>
+  <test_depend>rcl_interfaces</test_depend>
+  <test_depend>python3-shapely</test_depend>
+  <test_depend>python3-scipy</test_depend>
+  <test_depend>libpq-dev</test_depend>
+  <!-- <test_depend>python-psycopg2</test_depend> -->
+  <test_depend>python3-pyproj</test_depend>
+  <test_depend>python3-sqlalchemy</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

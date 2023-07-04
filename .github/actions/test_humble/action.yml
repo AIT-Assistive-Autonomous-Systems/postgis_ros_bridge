@@ -1,0 +1,6 @@
+name: 'Test Humble'
+description: 'Test using devcontainer'
+runs:
+  using: 'docker'
+  image: 'ros:humble-ros-base-jammy'
+  entrypoint: ".github/actions/test_humble/run.sh"
