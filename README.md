@@ -114,6 +114,8 @@ cartesian_transform:
   * `Marker`
 * `sensor_msgs`
   * `PointCloud2`
+* `foxglove_msgs`
+  * `GeoJSON`
 
 A simple example of to configure each type is listed in the following sections.
 
@@ -198,7 +200,7 @@ query_marker_array:
 ````
 For suitable message types, there is also the `Array` version implemented. For this example, the type is simply set to `MarkerArray`. In this example, the `frame_id` is set in the parameter section. It is also possible to define the `frame_id` in the query itself or as here, in the defaults. Query result overwrite the value set in the query section, and this parameter overwrites one in the defaults section, i.e. query result -> parameter section -> default value.
 
-### sensor_mgsg/msg/PointCloud2 [(ROS2 Reference)](https://docs.ros2.org/latest/api/sensor_msgs/msg/PointCloud2.html)
+### sensor_msgs/msg/PointCloud2 [(ROS2 Reference)](https://docs.ros2.org/latest/api/sensor_msgs/msg/PointCloud2.html)
 ````yaml
 query_pointcloud:
         query: "SELECT position AS geometry FROM landmark;"
@@ -208,6 +210,16 @@ query_pointcloud:
         rate: 1.0
 ````
 Minimal query to fetch points to be published as pointcloud2. The `rate` parameter overwrites the default value.
+
+
+### foxglove_msgs/msg/GeoJSON [(ROS2 Reference)](https://foxglove.dev/docs/studio/messages/geo-json)
+````yaml
+query_building_geojson:
+        query: "SELECT json_build_object('type', 'FeatureCollection', 'features', json_agg(json_build_object('type', 'Feature', 'geometry', ST_AsGeoJSON(wkb_geometry)::json))) AS geojson FROM building"
+        type: "GeoJSON" 
+        topic: "geojson_building"
+````
+Construct a GeoJSON object via sql query and name it as `geojson`. This type can be visualized with the `Map`-Panel in `foxglove-studio`. 
 
 
 # Funding

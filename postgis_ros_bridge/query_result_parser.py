@@ -15,6 +15,7 @@
 """Parser classes for converting query results to ROS messages."""
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Iterable, Tuple
+import json
 
 from builtin_interfaces.msg import Duration, Time
 from geometry_msgs.msg import (PointStamped, Polygon, PolygonStamped,
@@ -26,6 +27,7 @@ from sensor_msgs_py import point_cloud2
 from sqlalchemy import Result, Row
 from std_msgs.msg import ColorRGBA, Header
 from visualization_msgs.msg import Marker
+from foxglove_msgs.msg import GeoJSON
 
 from postgis_ros_bridge.postgis_converter import PostGisConverter
 from postgis_ros_bridge.geodesic_transform import GeodesicTransform
@@ -397,6 +399,50 @@ class MarkerResultParser(SingleElementParser):
 
     def __repr__(self) -> str:
         return super().__repr__() + f" (using frame_id: {self.frame_id} and topic: {self.topic})"
+
+
+class GeoJSONResultParser(SingleElementParser):
+    """Parser for marker results."""
+
+    TYPE = "GeoJSON"
+
+    def __init__(self):
+        super().__init__()
+
+    def declare_params(
+            self,
+            defaults: QueryResultDefaultParameters) -> Iterable[Tuple[str, Any,
+                                                                      ParameterDescriptor]]:
+        """Implement API of declare_params for marker results."""
+        return super().declare_params(defaults)
+
+    def set_params(self, params: Dict[str, Parameter]) -> Iterable[Tuple[str, Any]]:
+        """Implement API of set_params for marker results."""
+        topics = super().set_params(params)
+        return topics + [(self.topic, GeoJSON)]
+
+    def parse_single_element(self, element: Row, time: Time) -> Tuple[str, Any]:
+        """Implement API of parse_single_element for geojson results."""
+        return (self.topic, element.geometry)
+
+    def parse_result(self, result: Result, time: Time) -> Iterable[Tuple[str, Any]]:
+        """Implement API of parse_result for geojson results."""
+        element = result.first()
+        if not hasattr(element, 'geojson'):
+            raise ValueError("GeoJSON query reqires geojson column in SQL")
+
+        msg = GeoJSON()
+        if isinstance(element.geojson, str):
+            msg.geojson = element.geojson
+        elif isinstance(element.geojson, dict):
+            msg.geojson = json.dumps(element.geojson)
+        else:
+            raise ValueError("could not parse geojson result")
+
+        return [(self.topic, msg)]
+
+    def __repr__(self) -> str:
+        return super().__repr__() + f" (using topic: {self.topic})"
 
 
 class BasicStampedArrayParserFactory:

@@ -30,7 +30,7 @@ from postgis_ros_bridge.query_result_parser import (
     BasicStampedArrayParserFactory, MarkerResultParser, PC2ResultParser,
     PointResultParser, PolygonResultParser, PolygonStampedResultParser,
     PoseResultParser, PoseStampedResultParser, QueryResultDefaultParameters,
-    QueryResultParser)
+    QueryResultParser, GeoJSONResultParser)
 
 from postgis_ros_bridge.geodesic_transform import GeodesicTransform
 
@@ -43,7 +43,8 @@ query_parser: Dict[str, QueryResultParser] = {
         PC2ResultParser,
         MarkerResultParser,
         PolygonResultParser,
-        PolygonStampedResultParser
+        PolygonStampedResultParser,
+        GeoJSONResultParser
     ]}
 
 query_parser.update({
