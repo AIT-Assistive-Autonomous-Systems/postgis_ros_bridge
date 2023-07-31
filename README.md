@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/steven-tey/novel/blob/main/LICENSE">
+  <a href="https://github.com/AIT-Assistive-Autonomous-Systems/postgis_ros_bridge/blob/main/LICENSE">
         <img alt="GitHub" src="https://img.shields.io/github/license/AIT-Assistive-Autonomous-Systems/postgis_ros_bridge?label=License">
   </a>
     <a href="https://github.com/AIT-Assistive-Autonomous-Systems/postgis_ros_bridge/actions/workflows/linting.yaml">
